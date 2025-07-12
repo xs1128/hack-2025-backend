@@ -33,7 +33,7 @@ EMAIL_REMINDER_LIST = [
 ]
 
 EMAIL_FIXED_LIST = [
-    "早安！新的一天，記得來 SITCON Camp 完成每日任務！",
-    "新的一天新希望，快來答題！",
+    {"subject": "早安！新的一天", "html": "新的一天，記得來 SITCON Camp 完成每日任務！"},
+    {"subject": "新的一天新希望", "html": "快來答題！"},
     # ...你可以繼續加...
 ]

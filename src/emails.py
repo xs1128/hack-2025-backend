@@ -1,68 +1,58 @@
+import time
+import threading
+from datetime import datetime
 from fastapi import APIRouter
 from dotenv import load_dotenv
 import resend
 import os
-from apscheduler.schedulers.background import BackgroundScheduler
-import random
-from .email_contents import EMAIL_REMINDER_LIST, EMAIL_FIXED_LIST
+from email_contents import EMAIL_REMINDER_LIST, EMAIL_FIXED_LIST
+from shared_data import users
 
 load_dotenv()
-
 router = APIRouter()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
-def send_email(to: str, subject: str, html: str):
-    params = resend.Emails.SendParams(
-        **{
+# Define your email sending times (24-hour format)
+EMAIL_TIMES = ["02:46", "02:47", "02:48", "02:49", "02:50"]  # 9:30 PM, 10:00 PM, etc.
+
+
+@router.get("/send-email")
+def send_email():
+    """Function to send your email"""
+    if len(users) > 0:
+        params: resend.Emails.SendParams = {
             "from": "菇德 <good@camp.adk.to>",
-            "to": [to],
-            "subject": subject,
-            "html": html,
+            "to": users[0]["email"],  # Replace with actual recipient email
+            "subject": "EMAIL_FIXED_LIST[0]['subject']",
+            "html": "<p>it works!</p>"
         }
-    )
-    try:
-        email = resend.Emails.send(params)
-        return email
-    except Exception as e:
-        print(f"Email send failed: {e}")
-        return None
+    
+        try:
+            email = resend.Emails.send(params)
+            print(f"Email sent at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            return email
+        except Exception as e:
+            print(f"Failed to send email: {e}")
 
-# Internal API: 傳固定 Email
-@router.post("/internal/send_fixed_email")
-def send_fixed_email(user_email: str):
-    content = random.choice(EMAIL_FIXED_LIST)
-    subject = "SITCON Camp 每日提醒"
-    html = f"<p>{content}</p>"
-    return send_email(user_email, subject, html)
+def email_scheduler():
+    """Main scheduler function that runs continuously"""
+    print("Email scheduler started...")
+    print(f"Will send emails at: {', '.join(EMAIL_TIMES)}")
+    
+    last_sent_minute = None
+    
+    while True:
+        now = datetime.now()
+        current_time = now.strftime("%H:%M")
+        
+        # Only send once per minute to avoid duplicates
+        if current_time in EMAIL_TIMES and current_time != last_sent_minute:
+            send_email()
+            last_sent_minute = current_time
+        
+        # Check every 30 seconds
+        time.sleep(30)
 
-# Internal API: 傳還沒做提醒 Email
-@router.post("/internal/send_reminder_email")
-def send_reminder_email(user_email: str):
-    content = random.choice(EMAIL_REMINDER_LIST)
-    subject = "SITCON Camp 還沒完成提醒"
-    html = f"<p>{content}</p>"
-    return send_email(user_email, subject, html)
-
-# 定時任務
-def schedule_emails():
-    scheduler = BackgroundScheduler()
-    # 9:00 定時發送
-    scheduler.add_job(
-        lambda: send_fixed_email("ericchen08301@gmail.com"),
-        'cron', hour=9, minute=0, id='fixed_email_job'
-    )
-    # 22:30-23:59 每半小時發送一次提醒
-    for minute in range(30, 60, 30):
-        scheduler.add_job(
-            lambda: send_reminder_email("ericchen08301@gmail.com"),
-            'cron', hour=22, minute=minute, id=f'reminder_22_{minute}'
-        )
-    for minute in range(0, 60, 30):
-        scheduler.add_job(
-            lambda: send_reminder_email("ericchen08301@gmail.com"),
-            'cron', hour=23, minute=minute, id=f'reminder_23_{minute}'
-        )
-    scheduler.start()
-
-# 啟動時啟動排程
-schedule_emails()
+# Start the scheduler immediately when this module is imported
+scheduler_thread = threading.Thread(target=email_scheduler, daemon=True)
+scheduler_thread.start()
