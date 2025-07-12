@@ -21,9 +21,11 @@ def get_store(id: int):
 @router.post("/store/{id}")
 def post_store(id: int):
     # Check if enough money
-    if users[id]["store"]["coin"] < price_mapping["freeze"]:
-        return HTTPException(status_code=400, detail="Not enough coins!")
-
+    try:
+        if users[id]["store"]["coin"] < price_mapping["freeze"]:
+            return HTTPException(status_code=400, detail="Not enough coins!")
+    except IndexError as err:
+        raise HTTPException(status_code=400, detail=f"{err}")
     users[id]["store"]["coin"] -= price_mapping["freeze"]
     users[id]["store"]["freeze"] += 1
 
