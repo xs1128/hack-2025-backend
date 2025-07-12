@@ -56,7 +56,7 @@ def get_daily_question(user_id: int):
 
     # 4. Return the entire question object (statement and options)
     print(f"[DEBUG] Returning question: {question}")
-    return {"statement": question["statement"], "options": question["options"]}
+    return {"question_id": question["id"], "statement": question["statement"], "options": question["options"]}
 
 
 @router.post("/quiz/daily-question-answer")
