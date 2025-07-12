@@ -37,19 +37,25 @@ def get_daily_question(user_id: int):
     Pass the user's ID in the URL, e.g., /quiz/daily-question?user_id=1
     """
     # 1. Find the user in the list
+    print(f"[DEBUG] users: {users}")
     user = next((u for u in users if u['id'] == user_id), None)
     if not user:
+        print(f"[DEBUG] User with id {user_id} not found.")
         raise HTTPException(status_code=404, detail="User not found")
 
     # 2. Get the user's current question ID
     current_question_id = user['quiz']['current_id']
+    print(f"[DEBUG] current_question_id: {current_question_id}")
 
     # 3. Find the corresponding question in the library
+    print(f"[DEBUG] questions_library: {questions_library}")
     question = next((q for q in questions_library if q['id'] == current_question_id), None)
     if not question:
+        print(f"[DEBUG] Question with ID {current_question_id} not found in questions_library.")
         raise HTTPException(status_code=404, detail=f"Question with ID {current_question_id} not found")
 
     # 4. Return the entire question object (statement and options)
+    print(f"[DEBUG] Returning question: {question}")
     return {"statement": question["statement"], "options": question["options"]}
 
 
@@ -67,13 +73,9 @@ def submit_quiz_answer(payload: AnswerPayload):
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
 
-    # 2. Check if the submitted answer is correct
+    # Return 'correct answer' if the answer is correct, otherwise return the correct answer
     if question['answer'] == payload.submitted_answer:
-        # 3. Update user's stats on correct answer
-        user['quiz']['current_streak'] += 1
-        user['quiz']['solved_quiz'] += 1
         user['quiz']['current_id'] += 1  # Move to the next question
-        return {"message": "Correct answer!", "is_correct": True}
+        return {"message": "correct answer"}
     else:
-        user['quiz']['current_streak'] = 0  # Reset streak
-        return {"message": "Incorrect answer. Try again!", "is_correct": False}
+        return {"answer": question['answer']}
