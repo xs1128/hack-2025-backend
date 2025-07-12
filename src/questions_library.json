@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "statement": "In Python, which of the following data types is immutable?",
+        "options": ["list", "dict", "set", "tuple"],
+        "answer": "tuple"
+    },
+    {
+        "id": 2,
+        "statement": "What does the 'CSS' in web development stand for?",
+        "options": [
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Computer Style Sheets",
+            "Colorful Style Sheets"
+        ],
+        "answer": "Cascading Style Sheets"
+    },
+    {
+        "id": 3,
+        "statement": "Which of the following is NOT a valid way to declare a variable in JavaScript?",
+        "options": ["var", "let", "const", "def"],
+        "answer": "def"
+    },
+    {
+        "id": 4,
+        "statement": "In object-oriented programming, what is the concept of bundling data and methods that operate on the data into a single unit?",
+        "options": ["Inheritance", "Polymorphism", "Encapsulation", "Abstraction"],
+        "answer": "Encapsulation"
+    },
+    {
+        "id": 5,
+        "statement": "What is the primary purpose of a 'git clone' command?",
+        "options": [
+            "To create a new branch",
+            "To stage changes for a commit",
+            "To create a local copy of a remote repository",
+            "To merge two branches"
+        ],
+        "answer": "To create a local copy of a remote repository"
+    },
+    {
+        "id": 6,
+        "statement": "Which HTTP status code indicates a successful request?",
+        "options": ["404", "500", "200", "301"],
+        "answer": "200"
+    },
+    {
+        "id": 7,
+        "statement": "In SQL, which clause is used to filter the results of a query?",
+        "options": ["FROM", "ORDER BY", "GROUP BY", "WHERE"],
+        "answer": "WHERE"
+    },
+    {
+        "id": 8,
+        "statement": "What does API stand for?",
+        "options": [
+            "Application Programming Interface",
+            "Automated Program Interaction",
+            "Applied Process Integration",
+            "Application Process Interface"
+        ],
+        "answer": "Application Programming Interface"
+    },
+    {
+        "id": 9,
+        "statement": "Which data structure operates on a 'Last-In, First-Out' (LIFO) basis?",
+        "options": ["Queue", "Stack", "Heap", "Linked List"],
+        "answer": "Stack"
+    },
+    {
+        "id": 10,
+        "statement": "What is the time complexity of a binary search algorithm?",
+        "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+        "answer": "O(log n)"
+    }
+]
