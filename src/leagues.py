@@ -7,37 +7,37 @@ router = APIRouter()
 
 @router.get("/league/{id}")
 def get_league(id: int):
+    print(users)
     league = sorted(users, key=lambda x: x["quiz"]["solved_quiz"], reverse=True)
-    #print(users)
+    print(type(league))
     league_position = None
     for i in range(len(league)):
-        if(league[i]["id"] == id):
+        if league[i]["id"] == id:
             league_position = i
             break
-    user_datas_for_league=[]
     if league_position is None:
         raise HTTPException(status_code=404, detail="User not found in league")
-    pr = (league_position+1) / len(league) * 100
-    i = 0
-    cnt = 0
-    while cnt<20:
-        if i < 0 or i >= len(league):
-            i += 1
-            cnt += 1
+    
+    user_datas_for_league=[]
+    start_index = max(0, league_position - 10)
+    end_index = min(len(league), start_index + 11)
+    for i in range(start_index, end_index):
+        print(league[i])
+        if league[i]["ranking"] != league[league_position]["ranking"]:
+            if end_index < len(league):
+                end_index += 1
             continue
-        if league[i]["ranking"] == league[league_position]["ranking"]:
-            i += 1
-            continue
-        i += 1
-        cnt += 1
+        current_position = i + 1
+        pr= (current_position / len(league)) * 100
         league_data= {
         "all_user_id": league[i]["id"],
         "league_position": league_position+1,
         "pr": pr,
-        "ranking": league [i]["ranking"],
+        "ranking": league[i]["ranking"],
         }
         user_datas_for_league.append(league_data)
     return user_datas_for_league
+
 
 
 

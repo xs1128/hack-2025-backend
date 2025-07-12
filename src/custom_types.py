@@ -15,7 +15,7 @@ class StoreData(TypedDict):
 
 
 class User(TypedDict):
-    id: int
+    id: int   #starts from 0
     name: str | None
     email: str
     created_at: datetime  # date when account created
