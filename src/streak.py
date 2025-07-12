@@ -11,7 +11,7 @@ def streak():
     for i in range(len(users)): 
         if users[i]["store"]["freeze"] >= 1:
             users[i]['store']['freeze'] -= 1
-        elif users[i]["quiz"]["last_played"] == today:
+        elif users[i]["quiz"]["last_played"].date() == today:
             users[i]["quiz"]["current_streak"] += 1
         else:
             users[i]["quiz"]["current_streak"] = 0
@@ -19,7 +19,7 @@ def streak():
 
 @router.post("/did_today/{id}")
 def did_or_not(id: int):
-    if users[id]["quiz"]["last_played"] == today:
+    if users[id]["quiz"]["last_played"].date() == today:
         return 1
     else:
         return 0

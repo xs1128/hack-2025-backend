@@ -7,7 +7,6 @@ from pprint import pprint
 router = APIRouter()
 
 
-
 @router.get("/league/{id}")
 def get_league(id: int):
 
@@ -46,9 +45,6 @@ def get_league(id: int):
         })
 
     return league_data
-              
-
-
 
 
     '''判斷（備用）
