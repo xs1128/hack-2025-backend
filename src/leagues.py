@@ -1,49 +1,73 @@
 from fastapi import APIRouter
+from fastapi import HTTPException
 from custom_types import User
 from shared_data import users
 
 router = APIRouter()
 
-
-@router.get("/league/{user_id}")
-def get_league(user: User):
+@router.get("/league/{id}")
+def get_league(id: int):
     league = sorted(users, key=lambda x: x["quiz"]["solved_quiz"], reverse=True)
-    league_position = next(
-        (index + 1 for index, u in enumerate(league) if u["id"] == user["id"]), None
-    )
+    #print(users)
+    league_position = None
+    for i in range(len(league)):
+        if(league[i]["id"] == id):
+            league_position = i
+            break
+    user_datas_for_league=[]
     if league_position is None:
-        return {"error": "User not found in league"}
-    pr = league_position / len(league) * 100
-    if pr >= 95:
-        rank_name = "松露"
-        if pr < 96.5:
-            warn = True
-    elif pr >= 80:
-        rank_name = "蘑菇牛"
-        if pr < 84.5:
-            warn = True
-        elif pr >= 90.5:
-            promote = True
-    elif pr >= 55:
-        rank_name = "蘑菇"
-        if pr < 62.5:
-            warn = True
-        elif pr >= 72.5:
-            promote = True
-    elif pr >= 20:
-        rank_name = "酵母菌"
-        if pr < 30.5:
-            warn = True
-        elif pr >= 44.5:
-            promote = True
-    else:
-        rank_name = "泥土"
-        if pr >= 14:
-            promote = True
-    return {
-        "league_position": league_position,
+        raise HTTPException(status_code=404, detail="User not found in league")
+    pr = (league_position+1) / len(league) * 100
+    i = 0
+    cnt = 0
+    while cnt<20:
+        if i < 0 or i >= len(league):
+            i += 1
+            cnt += 1
+            continue
+        if league[i]["ranking"] == league[league_position]["ranking"]:
+            i += 1
+            continue
+        i += 1
+        cnt += 1
+        league_data= {
+        "all_user_id": league[i]["id"],
+        "league_position": league_position+1,
         "pr": pr,
-        "rank_name": rank_name,
-        "warn": warn if "warn" in locals() else False,
-        "promote": promote if "promote" in locals() else False,
-    }
+        "ranking": league [i]["ranking"],
+        }
+        user_datas_for_league.append(league_data)
+    return user_datas_for_league
+
+
+
+
+
+
+    '''判斷（備用）
+        warn = False
+        promote = False
+        if i == league_position:
+            if league[i]["ranking"] == 5:
+                if pr < 96.5:
+                    warn = True
+            elif league[i]["ranking"] == 4:
+                if pr < 84.5:
+                    warn = True
+                elif pr >= 90.5:
+                    promote = True
+            elif league[i]["ranking"] == 3:
+                if pr < 62.5:
+                    warn = True
+                elif pr >= 72.5:
+                    promote = True
+            elif league[i]["ranking"] == 2:
+                if pr < 30.5:
+                    warn = True
+                elif pr >= 44.5:
+                    promote = True
+            else:
+                if pr >= 14:
+                    promote = True
+        '''
+
