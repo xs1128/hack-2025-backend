@@ -4,7 +4,7 @@ from datetime import datetime
 
 class QuizData(TypedDict):
     current_id: int  # current question ID, starts from 1
-    last_played: datetime
+    last_played: datetime | None
     current_streak: int  #
     solved_quiz: int  # number of quizzes solve
 
@@ -15,13 +15,14 @@ class StoreData(TypedDict):
 
 
 class User(TypedDict):
-    id: int   #starts from 0
+    id: int  # starts from 0
     name: str | None
     email: str
     created_at: datetime  # date when account created
     quiz: QuizData
     store: StoreData
-    ranking: int # 1~5, 5 is the highest rank, 1 is the lowest
+    ranking: int  # 1~5, 5 is the highest rank, 1 is the lowest
+
 
 class Question(TypedDict):
     id: int
