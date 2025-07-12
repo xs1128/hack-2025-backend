@@ -33,12 +33,12 @@ def login(email: str):
             "last_played": datetime.now(),
             "current_streak": 0,
             "solved_quiz": 0,
-            "ranking": 1,
         },
         "store": {
             "coin": 0,
             "freeze": 0,
         },
+        "ranking": 1,
     }
 
     users.append(new_user)
