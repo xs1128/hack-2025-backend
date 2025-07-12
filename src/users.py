@@ -1,11 +1,10 @@
 from datetime import datetime
 
-from starlette.types import HTTPExceptionHandler
 from custom_types import User
 from shared_data import users
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import RedirectResponse
 import re
+
 router = APIRouter()
 
 
@@ -48,7 +47,12 @@ def login(email: str):
 @router.post("/user/setup/{_id}")
 def register_user(_id: int, name: str):
     try:
-        users[_id]["name"] = name
-        return {"user": users[_id]}
+        if users[_id]["name"] is None:
+            users[_id]["name"] = name
+            return {"user": users[_id]}
+        else:
+            raise HTTPException(
+                status_code=400, detail="Can't ammend existing user's data")
+
     except IndexError as err:
         raise HTTPException(status_code=400, detail=f"{err}")
