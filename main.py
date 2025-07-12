@@ -1,6 +1,125 @@
-def main():
-    print("Hello from hack-2025-backend!")
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
+from typing import TypedDict
+from datetime import datetime
+
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    main()
+class QuizData(TypedDict):
+    current_id: int  # current question ID, starts from 1
+    last_played: datetime
+    current_streak: int  #
+    solved_quiz: int  # number of quizzes solve
+
+
+class StoreData(TypedDict):
+    coin: int  # user coin balance
+    freeze: int  # defrost item count
+
+
+class User(TypedDict):
+    id: int
+    name: str | None
+    email: str
+    created_at: datetime  # date when account created
+    quiz: QuizData
+    store: StoreData
+
+
+class Question(TypedDict):
+    id : int
+    statement: str
+    options: list[str] # choose
+    answer: str
+
+
+# Store all users
+users: list[User] = []
+
+
+@app.get("/")
+def root():
+    return {"message": "Hello, 菇得!"}
+
+
+@app.post("/user/setup")
+def register_user(id: str):
+    # Register success, redirect to game page
+    ...
+
+
+# Simple authentication endpoint
+@app.post("/user")
+# TODO: add default val and error handling
+def login(email: str):
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid name and email format")
+
+    for user in users:
+        if email == user["email"]:
+            return {"user": user}
+        
+    id = len(users)
+    
+    new_user: User = {
+        "id": id, 
+        "name": None,
+        "email": email,
+        "created_at": datetime.now(),
+        "quiz": {
+            "current_id": 1,
+            "last_played": datetime.now(),
+            "current_streak": 0,
+            "solved_quiz": 0,
+        },
+        "store": {
+            "coin": 0,
+            "freeze": 0,
+        },
+    }
+
+    users.append(new_user)
+    return RedirectResponse("http://127.0.0.1:8000/user/setup?id=", id)
+
+
+@app.get("/league/{user_id}")
+def get_league(user:User):
+    league=sorted(users, key=lambda x: x["quiz"]["solved_quiz"], reverse=True)
+    league_position = next((index + 1 for index, u in enumerate(league) if u["id"] == user["id"]), None)
+    if league_position is None:
+        return {"error": "User not found in league"}
+    pr=league_position / len(league) *100
+    if pr >= 95:
+        rank_name = "松露"
+        if pr < 96.5:
+            warn = True
+    elif pr >= 80:
+        rank_name = "蘑菇牛"
+        if pr < 84.5:
+            warn = True
+        elif pr >= 90.5:
+            promote = True
+    elif pr >= 55:
+        rank_name = "蘑菇"
+        if pr < 62.5:
+            warn = True
+        elif pr >= 72.5:
+            promote = True
+    elif pr >= 20:
+        rank_name = "酵母菌"
+        if pr < 30.5:
+            warn = True
+        elif pr >= 44.5:
+            promote = True
+    else:
+        rank_name = "泥土"
+        if pr >= 14:
+            promote = True
+    return {
+        "league_position": league_position,
+        "pr": pr,
+        "rank_name": rank_name,
+        "warn": warn if 'warn' in locals() else False,
+        "promote": promote if 'promote' in locals() else False,
+    }

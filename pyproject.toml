@@ -1,9 +1,13 @@
 [project]
 name = "hack-2025-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "he backend service for Gū Dé, the guilt-tripping quiz app"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "clear>=2.0.0",
     "fastapi[standard]>=0.116.1",
+    "resend>=2.11.0",
 ]
+
+[tool.uv]
