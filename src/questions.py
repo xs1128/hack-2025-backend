@@ -29,7 +29,6 @@ except FileNotFoundError:
 
 
 # --- Corrected Endpoints ---
-
 @router.get("/quiz/daily-question")
 def get_daily_question(user_id: int):
     """

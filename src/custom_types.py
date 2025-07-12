@@ -15,14 +15,13 @@ class StoreData(TypedDict):
 
 
 class User(TypedDict):
-    id: int  # starts from 0
+    id: int   #starts from 0
     name: str | None
     email: str
     created_at: datetime  # date when account created
     quiz: QuizData
     store: StoreData
-    ranking: int  # 1~5, 5 is the highest rank, 1 is the lowest
-
+    ranking: int # 1~5, 5 is the highest rank, 1 is the lowest
 
 class Question(TypedDict):
     id: int

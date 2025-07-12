@@ -6,6 +6,30 @@ from emails import router as emails_router
 from questions import router as questions_router
 from streak import router as streak_router
 
+
+'''
+from shared_data import users
+for i in range(50):
+    users.append({
+        "id": i,
+        "name": f"User {i}",
+        "email": "jdfsl@gmail.com",
+        "created_at": "2023-10-01T00:00:00",
+        "quiz": {
+            "current_id": 1,
+            "last_played": "2023-10-01T00:00:00",
+            "current_streak": 0,
+            "solved_quiz": 0,
+        },
+        "store": {
+            "coin": 0,
+            "freeze": 0,
+        },
+        "ranking": i % 5 + 1,
+        }
+    )
+'''
+
 app = FastAPI()
 
 app.include_router(users_router)
