@@ -14,7 +14,7 @@ def login(email: str):
     if not email:
         raise HTTPException(
             status_code=400, detail="Invalid name and email format")
-    elif re.match(r'^[a-zA-Z0–9._%+-]+@[a-zA-Z0–9.-]+\.[a-zA-Z]{2,}$', email) is None:
+    elif re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) is None:
         raise HTTPException(status_code=422, detail="Invalid email")
 
     for user in users:
