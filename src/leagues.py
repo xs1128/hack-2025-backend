@@ -11,11 +11,11 @@ router = APIRouter()
 def get_league(id: int):
 
     league = sorted(
-        users, 
-        key = lambda x: x["quiz"]["solved_quiz"], 
+        users,
+        key=lambda x: x["quiz"]["solved_quiz"],
         reverse=True
     )
-    
+
     league_position = None
 
     for i in range(len(league)):
@@ -26,13 +26,14 @@ def get_league(id: int):
 
     if league_position is None:
         raise HTTPException(status_code=404, detail="User not found in league")
-    
+
     league = list(filter(
-        lambda x: x["ranking"] == users[league_position]["ranking"], 
+        lambda x: x["ranking"] == users[league_position]["ranking"],
         league
     ))
 
-    filtered_league = league[max(0, league_position - 10):min(len(league), league_position + 11)]
+    filtered_league = league[max(
+        0, league_position - 10):min(len(league), league_position + 11)]
 
     league_data = []
 
@@ -45,7 +46,6 @@ def get_league(id: int):
         })
 
     return league_data
-
 
     '''判斷（備用）
         warn = False
@@ -73,4 +73,3 @@ def get_league(id: int):
                 if pr >= 14:
                     promote = True
         '''
-

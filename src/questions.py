@@ -58,7 +58,8 @@ def get_daily_question(user_id: int):
     )
     if not question:
         print(
-            f"[DEBUG] Question with ID {current_question_id} not found in questions_library."
+            f"[DEBUG] Question with ID {
+                current_question_id} not found in questions_library."
         )
         raise HTTPException(
             status_code=404, detail=f"Question with ID {current_question_id} not found"

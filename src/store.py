@@ -1,7 +1,5 @@
-from custom_types import User
 from shared_data import users
 from fastapi import APIRouter, HTTPException
-from typing import TypedDict
 
 router = APIRouter()
 
@@ -15,7 +13,7 @@ price_mapping = {
 @router.get("/store/{id}")
 def get_store(id: int):
     # Encapsulation later
-    return users[0]["store"]
+    return users[id]["store"]
 
 
 @router.post("/store/{id}")
