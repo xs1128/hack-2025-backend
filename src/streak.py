@@ -19,7 +19,9 @@ def streak():
 
 @router.post("/did_today/{id}")
 def did_or_not(id: int):
-    if users[id]["quiz"]["last_played"].date() == today:
+    if users[id]["quiz"]["last_played"] == None:
+        return 0
+    elif users[id]["quiz"]["last_played"].date() == today:
         return 1
     else:
         return 0
