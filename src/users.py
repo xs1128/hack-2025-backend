@@ -56,5 +56,5 @@ def register_user(id: int, name: str):
                 status_code=400, detail="Can't ammend existing user's data"
             )
 
-    except IndexError as err:
-        raise HTTPException(status_code=400, detail=f"{err}")
+    except IndexError:
+        raise HTTPException(status_code=400, detail="User not found")

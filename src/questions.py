@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 # Assume these are defined in your other files
-from custom_types import User, Question
+from custom_types import Question
 from shared_data import users
 
 
