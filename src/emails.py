@@ -1,7 +1,8 @@
 import time
 import threading
-from datetime import datetime
-from fastapi import APIRouter
+import random
+from datetime import datetime, timedelta
+from fastapi import APIRouter,Response
 from dotenv import load_dotenv
 import resend
 import os
@@ -12,47 +13,52 @@ load_dotenv()
 router = APIRouter()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
-# Define your email sending times (24-hour format)
-EMAIL_TIMES = ["02:46", "02:47", "02:48", "02:49", "02:50"]  # 9:30 PM, 10:00 PM, etc.
 
 
-@router.get("/send-email")
-def send_email():
-    """Function to send your email"""
-    if len(users) > 0:
+@router.get("/mail/moring")
+def send_morning_email():
+    
+    if len(users) == 0:
+        print("No users available to send morning email")
+        return None
+    
+    if len(EMAIL_FIXED_LIST) == 0:
+        raise ValueError("EMAIL_FIXED_LIST is empty. Please check your email content configuration.")
+    
+    email_content = random.choice(EMAIL_FIXED_LIST)
+    
+    for user in users:
         params: resend.Emails.SendParams = {
             "from": "菇德 <good@camp.adk.to>",
-            "to": users[0]["email"],  # Replace with actual recipient email
-            "subject": "EMAIL_FIXED_LIST[0]['subject']",
-            "html": "<p>it works!</p>"
+            "to": user["email"],
+            "subject": email_content["subject"],
+            "html": email_content["html"]
         }
-    
-        try:
-            email = resend.Emails.send(params)
-            print(f"Email sent at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            return email
-        except Exception as e:
-            print(f"Failed to send email: {e}")
 
-def email_scheduler():
-    """Main scheduler function that runs continuously"""
-    print("Email scheduler started...")
-    print(f"Will send emails at: {', '.join(EMAIL_TIMES)}")
-    
-    last_sent_minute = None
-    
-    while True:
-        now = datetime.now()
-        current_time = now.strftime("%H:%M")
+        email = resend.Emails.send(params)
+    return Response(status_code=204)
         
-        # Only send once per minute to avoid duplicates
-        if current_time in EMAIL_TIMES and current_time != last_sent_minute:
-            send_email()
-            last_sent_minute = current_time
-        
-        # Check every 30 seconds
-        time.sleep(30)
+@router.get("/mail/night/")
+def send_reminder_email():
+    
+    if len(users) == 0:
+        print("No users available to send reminder email")
+        return None
+    
+    if len(EMAIL_REMINDER_LIST) == 0:
+        print("No reminder email content available")
+        return None
+    email_content = random.choice(EMAIL_REMINDER_LIST)
+    for user in users:
+        if user["quiz"]["last_played"] and user["quiz"]["last_played"].date() == datetime.now().date():
+            continue
+        params: resend.Emails.SendParams = {
+            "from": "菇德 <good@camp.adk.to>",
+            "to": user["email"],
+            "subject": "超好笑有夠爛的",
+            "html": f"<p>{email_content}</p>"
+        }
 
-# Start the scheduler immediately when this module is imported
-scheduler_thread = threading.Thread(target=email_scheduler, daemon=True)
-scheduler_thread.start()
+        email = resend.Emails.send(params)
+
+    return Response(status_code=204)     
