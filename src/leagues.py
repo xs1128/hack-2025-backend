@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
-from custom_types import User
 from shared_data import users
-from pprint import pprint
 
 router = APIRouter()
 
@@ -46,30 +44,3 @@ def get_league(id: int):
         })
 
     return league_data
-
-    '''判斷（備用）
-        warn = False
-        promote = False
-        if i == league_position:
-            if league[i]["ranking"] == 5:
-                if pr < 96.5:
-                    warn = True
-            elif league[i]["ranking"] == 4:
-                if pr < 84.5:
-                    warn = True
-                elif pr >= 90.5:
-                    promote = True
-            elif league[i]["ranking"] == 3:
-                if pr < 62.5:
-                    warn = True
-                elif pr >= 72.5:
-                    promote = True
-            elif league[i]["ranking"] == 2:
-                if pr < 30.5:
-                    warn = True
-                elif pr >= 44.5:
-                    promote = True
-            else:
-                if pr >= 14:
-                    promote = True
-        '''
