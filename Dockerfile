@@ -16,4 +16,5 @@ RUN uv sync --frozen --no-cache
 
 EXPOSE 8080
 
-CMD ["/code/.venv/bin/fastapi", "run", "--host", "0.0.0.0", "--port", "8080", "/code/src/main.py"]
+# Run both FastAPI and cron jobs
+CMD ["/bin/sh", "-c", "(/code/.venv/bin/python -u /code/cron_jobs.py 2>&1 | sed 's/^/[CRON] /' &) && (/code/.venv/bin/fastapi run --host 0.0.0.0 --port 8080 /code/src/main.py 2>&1 | sed 's/^/[API] /' &) && wait"]
