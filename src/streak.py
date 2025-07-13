@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Response
 from custom_types import User
 from shared_data import users
 from datetime import datetime
@@ -17,10 +17,10 @@ def streak():
             users[i]["store"]["freeze"] -= 1
         else:
             users[i]["quiz"]["current_streak"] = 0
-    return
+    return Response(status_code=204)
 
 
-@router.post("/streak_stat/{id}")
+@router.get("/streak_stat/{id}")
 def streak_status(id: int):
     today = datetime.now().date()
     user = None
@@ -34,8 +34,6 @@ def streak_status(id: int):
     return {
         "current_streak": user["quiz"]["current_streak"],
         "today_completed": (
-            1
-            if user_last_played is not None and user_last_played.date() == today
-            else 0
+            user_last_played is not None and user_last_played.date() == today
         ),
     }

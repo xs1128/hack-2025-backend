@@ -24,7 +24,7 @@ def buy(id: int):
     # Check if enough money
     try:
         if users[id]["store"]["coin"] < price_mapping["freeze"]:
-            return HTTPException(status_code=400, detail="Not enough coins!")
+            raise HTTPException(status_code=400, detail="Not enough coins!")
     except IndexError:
         raise HTTPException(status_code=400, detail="User not found")
     users[id]["store"]["coin"] -= price_mapping["freeze"]
