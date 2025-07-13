@@ -14,7 +14,6 @@ router = APIRouter()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
 
-
 @router.get("/mail/moring")
 def send_morning_email():
     

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 # Assume these are defined in your other files
-from custom_types import User, Question
+from custom_types import Question
 from shared_data import users
 
 
@@ -58,7 +58,8 @@ def get_daily_question(user_id: int):
     )
     if not question:
         print(
-            f"[DEBUG] Question with ID {current_question_id} not found in questions_library."
+            f"[DEBUG] Question with ID {
+                current_question_id} not found in questions_library."
         )
         raise HTTPException(
             status_code=404, detail=f"Question with ID {current_question_id} not found"

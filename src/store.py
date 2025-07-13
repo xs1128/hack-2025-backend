@@ -1,7 +1,5 @@
-from custom_types import User
 from shared_data import users
 from fastapi import APIRouter, HTTPException
-from typing import TypedDict
 
 router = APIRouter()
 
@@ -13,19 +11,22 @@ price_mapping = {
 
 # Store site
 @router.get("/store/{id}")
-def get_store(id: int):
-    # Encapsulation later
-    return users[0]["store"]
+def get_resource(id: int):
+    try:
+        # Encapsulation later
+        return users[id]["store"]
+    except IndexError:
+        raise HTTPException(status_code=400, detail="User not found")
 
 
-@router.post("/store/{id}")
-def post_store(id: int):
+@router.post("/store/buy/{id}")
+def buy(id: int):
     # Check if enough money
     try:
         if users[id]["store"]["coin"] < price_mapping["freeze"]:
             return HTTPException(status_code=400, detail="Not enough coins!")
-    except IndexError as err:
-        raise HTTPException(status_code=400, detail=f"{err}")
+    except IndexError:
+        raise HTTPException(status_code=400, detail="User not found")
     users[id]["store"]["coin"] -= price_mapping["freeze"]
     users[id]["store"]["freeze"] += 1
 

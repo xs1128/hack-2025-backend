@@ -15,3 +15,18 @@ uv sync
 ```bash
 fastapi dev src/main.py
 ```
+
+## 安裝與設定
+### 系統需求:
+- FastAPI
+- Resend API 和 API 金鑰
+- Python >= 3.12
+
+## 環境設定
+在根目錄建立 ```.env``` 檔案：
+```
+RESEND_API_KEY=YOUR_KEY
+```
+
+# Credits
+Refer here for [CREDITS.md](CREDITS.md). 

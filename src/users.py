@@ -12,7 +12,8 @@ router = APIRouter()
 @router.post("/user")
 def login(email: str):
     if not email:
-        raise HTTPException(status_code=400, detail="Invalid name and email format")
+        raise HTTPException(
+            status_code=400, detail="Invalid name and email format")
     elif re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email) is None:
         raise HTTPException(status_code=422, detail="Invalid email")
 
@@ -44,16 +45,16 @@ def login(email: str):
     return {"user": users[_id]}
 
 
-@router.post("/user/setup/{_id}")
-def register_user(_id: int, name: str):
+@router.post("/user/setup/{id}")
+def register_user(id: int, name: str):
     try:
-        if users[_id]["name"] is None:
-            users[_id]["name"] = name
-            return {"user": users[_id]}
+        if users[id]["name"] is None:
+            users[id]["name"] = name
+            return {"user": users[id]}
         else:
             raise HTTPException(
                 status_code=400, detail="Can't ammend existing user's data"
             )
 
-    except IndexError as err:
-        raise HTTPException(status_code=400, detail=f"{err}")
+    except IndexError:
+        raise HTTPException(status_code=400, detail="User not found")
