@@ -2,7 +2,7 @@ import time
 import threading
 import random
 from datetime import datetime, timedelta
-from fastapi import APIRouter,Response
+from fastapi import APIRouter, Response
 from dotenv import load_dotenv
 import resend
 import os
@@ -14,50 +14,56 @@ router = APIRouter()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
 
-@router.get("/mail/moring")
+@router.get("/internal/morning_mail")
 def send_morning_email():
-    
+
     if len(users) == 0:
         print("No users available to send morning email")
         return None
-    
+
     if len(EMAIL_FIXED_LIST) == 0:
-        raise ValueError("EMAIL_FIXED_LIST is empty. Please check your email content configuration.")
-    
+        raise ValueError(
+            "EMAIL_FIXED_LIST is empty. Please check your email content configuration."
+        )
+
     email_content = random.choice(EMAIL_FIXED_LIST)
-    
+
     for user in users:
         params: resend.Emails.SendParams = {
             "from": "菇德 <good@camp.adk.to>",
             "to": user["email"],
             "subject": email_content["subject"],
-            "html": email_content["html"]
+            "html": email_content["html"],
         }
 
-        email = resend.Emails.send(params)
+        resend.Emails.send(params)
     return Response(status_code=204)
-        
-@router.get("/mail/night/")
+
+
+@router.get("/internal/night_mail")
 def send_reminder_email():
-    
+
     if len(users) == 0:
         print("No users available to send reminder email")
         return None
-    
+
     if len(EMAIL_REMINDER_LIST) == 0:
         print("No reminder email content available")
         return None
     email_content = random.choice(EMAIL_REMINDER_LIST)
     for user in users:
-        if user["quiz"]["last_played"] and user["quiz"]["last_played"].date() == datetime.now().date():
+        if (
+            user["quiz"]["last_played"]
+            and user["quiz"]["last_played"].date() == datetime.now().date()
+        ):
             continue
         params: resend.Emails.SendParams = {
             "from": "菇德 <good@camp.adk.to>",
             "to": user["email"],
-            "subject": "超好笑有夠爛的",
-            "html": f"<p>{email_content}</p>"
+            "subject": "姑德的溫馨提醒",
+            "html": f"<p>{email_content}</p>",
         }
 
-        email = resend.Emails.send(params)
+        resend.Emails.send(params)
 
-    return Response(status_code=204)     
+    return Response(status_code=204)

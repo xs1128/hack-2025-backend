@@ -84,6 +84,11 @@ def submit_quiz_answer(payload: AnswerPayload):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    if payload.question_id != user["quiz"]["current_id"]:
+        raise HTTPException(
+            status_code=400, detail="Question ID does not match the current question"
+        )
+
     question = next(
         (q for q in questions_library if q["id"] == payload.question_id), None
     )
@@ -98,6 +103,7 @@ def submit_quiz_answer(payload: AnswerPayload):
             user["quiz"]["current_streak"] += 1
         user["quiz"]["solved_quiz"] += 1
         user["quiz"]["last_played"] = datetime.now()
+        user["store"]["coin"] += 1
         return {"message": "correct answer"}
     else:
         return {"answer": question["answer"]}
