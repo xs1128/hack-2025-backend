@@ -14,7 +14,7 @@ router = APIRouter()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
 
-@router.get("/internal/morning_mail")
+@router.get("/internal/morning-mail")
 def send_morning_email():
 
     if len(users) == 0:
@@ -40,7 +40,7 @@ def send_morning_email():
     return Response(status_code=204)
 
 
-@router.get("/internal/night_mail")
+@router.get("/internal/night-mail")
 def send_reminder_email():
 
     if len(users) == 0:

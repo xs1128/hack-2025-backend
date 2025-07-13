@@ -47,7 +47,7 @@ def get_league(id: int):
     return league_data
 
 
-@router.post("/internal/conclude_league")
+@router.post("/internal/conclude-league")
 def conclude_league():
 
     league = sorted(users, key=lambda x: x["quiz"]["solved_quiz"], reverse=True)

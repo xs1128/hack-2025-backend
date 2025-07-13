@@ -6,7 +6,7 @@ from datetime import datetime
 router = APIRouter()
 
 
-@router.post("/internal/conclude_streak")
+@router.post("/internal/conclude-streak")
 def streak():
     today = datetime.now().date()
     for i in range(len(users)):
@@ -20,7 +20,7 @@ def streak():
     return Response(status_code=204)
 
 
-@router.get("/streak_stat/{id}")
+@router.get("/streak-stat/{id}")
 def streak_status(id: int):
     today = datetime.now().date()
     user = None
